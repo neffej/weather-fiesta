@@ -2,6 +2,8 @@ var searchItem = {name:'London',state: 'England', country: 'GB'}
 var searchEl = [searchItem.name,searchItem.state,searchItem.country]
 // // var searchString= JSON.stringify(searchEl)
 var searchBtn = document.querySelector('#search-button')
+var latArray=[];
+var longArray=[];
 
 
 
@@ -38,21 +40,15 @@ function displaySearchResults(city){
     const row = document.createElement('a');
 
     row.classList= 'list-item flex-row justify-space-between align-center btn btn-light rounded-3 text-dark'
-    row.innerHTML = [city[i].name,' '+city[i].state,' '+city[i].country] 
-    row.setAttribute = ('href','http://api.openweathermap.org/data/2.5/forecast?'+city[i].lat+'&'+city[i].lon+'&appid=af55055307791ec469a2fe0620680567')
+    row.textContent = [city[i].name,' '+city[i].state,' '+city[i].country] 
+    latArray.push(city[i].lat)
+    longArray.push( city[i].lon)
+    row.href ='http://api.openweathermap.org/data/2.5/forecast?lat='+city[i].lat+'&lon='+city[i].lon+'&appid=af55055307791ec469a2fe0620680567'
+    console.log(latArray,longArray)
+    
 
     list.appendChild(row);  
 }}
-
-function addCityToList(){
-    const list = document.querySelector('.list-group');
-
-    const row = document.createElement('li');
-
-    // row.innerHTML = 
-}
-
-
 
 function sendCityToAPI(city){
     var geocodingURL= 'http://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=5&appid=af55055307791ec469a2fe0620680567'
@@ -69,7 +65,6 @@ function sendCityToAPI(city){
 
 searchBtn.addEventListener('click', function(event){
     event.preventDefault();
-    console.log('this works input is broken')
 
     var city = document.querySelector('#search').value;
 
@@ -81,6 +76,31 @@ searchBtn.addEventListener('click', function(event){
         sendCityToAPI(city);
         }
 });
+
+
+// Select city from list and display weather forecast
+// Select city from list:
+
+
+document.querySelector('#search-results').addEventListener('click',function(event){
+    event.preventDefault;
+    var city = document.getElementsByClassName('list-item')[2]
+    console.log(city.href)
+
+
+
+
+})
+
+
+function addCityToList(){
+    const list = document.querySelector('.list-group');
+
+    const row = document.createElement('li');
+
+    // row.innerHTML = 
+}
+
 
 
 

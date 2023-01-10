@@ -18,13 +18,17 @@
         <div class="container">
             <div class="row align-items-start">
                 <div class="col-sm-4 mt-2 border-bottom border-2 border-dark" id="search-form ">
-                    <input type="text" placeholder="Search" id="search" class="form-control mb-2">
-                    <input type="submit" value="Add City" class="btn btn-primary btn-block w-100 mb-3">
-                    <div class="list-group">
-
+                    <input type="text" id="search" class="form-control mb-2" placeholder="Search">
+                    <input type="submit" id="search-button" value="Add City" class="btn btn-primary btn-block w-100 mb-3"></button>
+                    <p id="demo" class="text-center"></p>
+                    <div class="list-group" id="search-results">
+                        <!-- This is where search suggestions appear -->
                     </div>
+                    <ul class="list-group">
+                            <!-- This is where selected cities appear -->
+                    </ul>
                 </div>
-                <div class="forecast col-sm-8 mt-2">
+                <div class="forecast col-sm-8 mt-2 ">
                     <p>this is a box 2</p>
                 </div>
             </div>

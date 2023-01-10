@@ -2,8 +2,7 @@ var searchItem = {name:'London',state: 'England', country: 'GB'}
 var searchEl = [searchItem.name,searchItem.state,searchItem.country]
 // // var searchString= JSON.stringify(searchEl)
 var searchBtn = document.querySelector('#search-button')
-var latArray=[];
-var longArray=[];
+var latLongArray=[];
 
 
 
@@ -40,11 +39,13 @@ function displaySearchResults(city){
     const row = document.createElement('a');
 
     row.classList= 'list-item flex-row justify-space-between align-center btn btn-light rounded-3 text-dark'
+    row.id=[i]
     row.textContent = [city[i].name,' '+city[i].state,' '+city[i].country] 
-    latArray.push(city[i].lat)
-    longArray.push( city[i].lon)
-    row.href ='http://api.openweathermap.org/data/2.5/forecast?lat='+city[i].lat+'&lon='+city[i].lon+'&appid=af55055307791ec469a2fe0620680567'
-    console.log(latArray,longArray)
+    var lat = city[i].lat;
+    var lon = city[i].lon;
+    latLongArray.push({lat, lon})
+
+    console.log(latLongArray)
     
 
     list.appendChild(row);  
@@ -84,11 +85,11 @@ searchBtn.addEventListener('click', function(event){
 
 document.querySelector('#search-results').addEventListener('click',function(event){
     event.preventDefault;
-    var city = document.getElementsByClassName('list-item')[2]
-    console.log(city.href)
+    var city = event.target
+    var cityID = Number(city.id)
+    console.log(latLongArray[cityID])
 
-
-
+    // 'http://api.openweathermap.org/data/2.5/forecast?lat='+city[i].lat+'&lon='+city[i].lon+'&appid=af55055307791ec469a2fe0620680567'
 
 })
 

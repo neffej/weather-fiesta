@@ -8,6 +8,7 @@ var clearBtn = document.querySelector('#clear-button')
 var latLongArray=[];
 var savedCoordinates=[];
 var cityList=[];
+var IDArray=[0,1,2,3,4]
 
 
 var forecastURL= 'http://api.openweathermap.org/data/2.5/forecast?lat=34.8781&lon=-83.4010&appid=af55055307791ec469a2fe0620680567'
@@ -58,6 +59,7 @@ document.querySelector('#search-results').addEventListener('click',function(even
     var city = event.target
     var cityID = Number(city.id)
     var cityName = city.textContent
+    console.log(cityName)
     console.log(latLongArray[cityID])
     var latLong = latLongArray[cityID]
     
@@ -70,16 +72,20 @@ document.querySelector('#search-results').addEventListener('click',function(even
 
 document.querySelector('#selected-cities').addEventListener('click',function(event){
     event.preventDefault;
+
+
     var city = event.target;
     var cityText = city.textContent
-    var cityList = JSON.parse(localStorage.getItem('citylist'))
     console.log(cityText)   
+
+
+    var cityList = JSON.parse(localStorage.getItem('citylist'))
     console.log(cityList[0].cityName)
 
     for (var i = 0; i < cityList.length; i++){
         if (cityText === cityList[i].cityName){
             console.log('cities match')
-            var forecastURL= 'http://api.openweathermap.org/data/2.5/forecast?lat='+cityList[i].latLong.lat+'&lon='+cityList[i].latLong.lon+'&appid=af55055307791ec469a2fe0620680567&units=imperial'
+            var forecastURL= 'https://api.openweathermap.org/data/2.5/forecast?lat='+cityList[i].latLong.lat+'&lon='+cityList[i].latLong.lon+'&appid=af55055307791ec469a2fe0620680567&units=imperial'
 
             fetch(forecastURL)
             .then(function(response){
@@ -105,19 +111,22 @@ function displaySearchResults(city){
     const row = document.createElement('a');
 
     row.classList= 'list-item flex-row justify-space-between align-center btn btn-light rounded-3 text-dark'
-    row.id=[i]
-    row.textContent = [city[i].name,' '+city[i].state,' '+city[i].country] 
+    row.id= IDArray[i];
+    row.textContent = [city[i].name,' '+city[i].state,' '+city[i].country]
+    
     var lat = city[i].lat;
     var lon = city[i].lon;
     latLongArray.push({lat, lon})
 
-    console.log(latLongArray)
+
 
     list.appendChild(row);  
-}}
+}
+console.log(latLongArray)
+}
 
 function searchCityList(city){
-    var geocodingURL= 'http://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=5&appid=af55055307791ec469a2fe0620680567'
+    var geocodingURL= 'https://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=5&appid=af55055307791ec469a2fe0620680567'
 
     fetch(geocodingURL)
     .then(function(response){
@@ -136,7 +145,6 @@ function searchCityList(city){
 }
 
 function addCityToList(city){
-    // console.log(city.textContent)
     // Append selected city to list
     const list = document.querySelector('#selected-cities');
 
@@ -158,12 +166,16 @@ function displayForecast(city){
     const temp = document.createElement('p')
     const wind = document.createElement('p')
     const hum = document.createElement('p')
+
     location.textContent = city.city.name + "   "+ city.list[0].dt_txt + "  "+city.list[0].weather[0].icon
     location.classList = 'fs-2'
 
     temp.textContent = "Temperature:  "+city.list[0].main.temp+" °F"
     wind.textContent = "Wind Speed:  " +city.list[0].wind.speed+" MPH"
     hum.textContent = "Humidity:  "+city.list[0].main.humidity+"%"
+
+    // while(list.firstChild){list.removeChild(list.firstChild)}
+
     list.appendChild(location)
     list.appendChild(temp)
     list.appendChild(wind)

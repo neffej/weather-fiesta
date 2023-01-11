@@ -19,12 +19,14 @@
             <div class="row align-items-start">
                 <div class="col-sm-4 mt-2 border-bottom border-2 border-dark" id="search-form ">
                     <input type="text" id="search" class="form-control mb-2" placeholder="Search">
-                    <input type="submit" id="search-button" value="Add City" class="btn btn-primary btn-block w-100 mb-3"></button>
-                    <p id="demo" class="text-center"></p>
+                    <input type="submit" id="search-button" value="Add City" class="btn btn-primary btn-block w-100 mb-3 border-bottom border-2 border-dark">
+
+                    <button id="clear-button" class="btn btn-warning btn-block w-100 mb-3" >Clear Cities</button>
+
                     <div class="list-group" id="search-results">
                         <!-- This is where search suggestions appear -->
                     </div>
-                    <ul class="list-group">
+                    <ul class="list-group" id="selected-cities">
                             <!-- This is where selected cities appear -->
                     </ul>
                 </div>

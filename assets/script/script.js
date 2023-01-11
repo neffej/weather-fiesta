@@ -154,20 +154,20 @@ function displayForecast(city){
     console.log(city);
     const list =  document.querySelector('#current-weather')
 
+    const location = document.createElement('h1')
     const temp = document.createElement('p')
     const wind = document.createElement('p')
     const hum = document.createElement('p')
-    list.textContent = city.city.name + "   "+ city.list[0].dt_txt + "  "+city.list[0].weather[0].icon
+    location.textContent = city.city.name + "   "+ city.list[0].dt_txt + "  "+city.list[0].weather[0].icon
+    location.classList = 'fs-2'
 
-    temp.textContent = "Temperature:  "+city.list[0].main.temp
-    wind.textContent = "Wind Speed:  " +city.list[0].wind.speed
-    hum.textContent = "Humidity:  "+city.list[0].main.humidity
-
-    console.log(city.list[0].main.temp)
+    temp.textContent = "Temperature:  "+city.list[0].main.temp+" °F"
+    wind.textContent = "Wind Speed:  " +city.list[0].wind.speed+" MPH"
+    hum.textContent = "Humidity:  "+city.list[0].main.humidity+"%"
+    list.appendChild(location)
     list.appendChild(temp)
     list.appendChild(wind)
     list.appendChild(hum)
-    console.log(city.city.name)
     
        
 

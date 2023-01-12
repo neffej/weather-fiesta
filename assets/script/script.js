@@ -3,6 +3,8 @@ var searchEl = [searchItem.name,searchItem.state,searchItem.country]
 // // var searchString= JSON.stringify(searchEl)
 var searchBtn = document.querySelector('#search-button')
 var searchResults = document.querySelector('#search-results')
+var forecastEl = document.querySelector('#forecast-cards');
+
 
 var clearBtn = document.querySelector('#clear-button')
 var latLongArray=[];
@@ -19,6 +21,7 @@ var dayFive = []
 var tempArray = []
 var windArray = []
 var humArray = []
+var dateArray = []
 
 
 var forecastURL= 'http://api.openweathermap.org/data/2.5/forecast?lat=34.8781&lon=-83.4010&appid=af55055307791ec469a2fe0620680567'
@@ -177,18 +180,46 @@ function calculateForecast(city){
         
         var temp = city.list[i].main.temp
         var wind = city.list[i].wind.speed
-        var hum = city.list[i].main.humidity    
+        var hum = city.list[i].main.humidity
+        var data =  city.list[i].dt_txt.split(" ") 
+        var date = data[0]  
 
             tempArray.push(temp)
             windArray.push(wind)
             humArray.push(hum)
+            dateArray.push(date)
     }
     dayOne.push(calculateDayOne(tempArray))
     dayOne.push(calculateDayOne(windArray))
     dayOne.push(calculateDayOne(humArray))
-    console.log(dayOne)
+    dayOne.push(dateArray[0])
+    dayTwo.push(calculateDayTwo(tempArray))
+    dayTwo.push(calculateDayTwo(windArray))
+    dayTwo.push(calculateDayTwo(humArray))
+    dayTwo.push(dateArray[8])
+    dayThree.push(calculateDayThree(tempArray))
+    dayThree.push(calculateDayThree(windArray))
+    dayThree.push(calculateDayThree(humArray))
+    dayThree.push(dateArray[16])
+    dayFour.push(calculateDayFour(tempArray))
+    dayFour.push(calculateDayFour(windArray))
+    dayFour.push(calculateDayFour(humArray))
+    dayFour.push(dateArray[24])
+    dayFive.push(calculateDayFive(tempArray))
+    dayFive.push(calculateDayFive(windArray))
+    dayFive.push(calculateDayFive(humArray))
+    dayFive.push(dateArray[32])
 
+console.log(dayOne)
+console.log(dayTwo)
+    appendCards(dayOne,0);
+    appendCards(dayTwo,1);
+    appendCards(dayThree,2);
+    appendCards(dayFour,3);
+    appendCards(dayFive,4);
 }
+
+
 function calculateDayOne(array){
     var total = 0;
     var count = 0;
@@ -197,7 +228,9 @@ function calculateDayOne(array){
         total += array[i];
         count++;
     };
-    return ( total / count)
+    let num = ( total / count)
+    let n = num.toFixed(0);
+    return n
 }
 function calculateDayTwo(array){
     var multiplier = 1
@@ -208,7 +241,9 @@ function calculateDayTwo(array){
         total += array[i];
         count++;
     };
-    return ( total / count)
+    let num = ( total / count)
+    let n = num.toFixed(0);
+    return n
 }
 function calculateDayThree(array){
     var multiplier = 2
@@ -219,7 +254,9 @@ function calculateDayThree(array){
         total += array[i];
         count++;
     };
-    return ( total / count)
+    let num = ( total / count)
+    let n = num.toFixed(0);
+    return n
 }
 function calculateDayFour(array){
     var multiplier = 3
@@ -230,7 +267,9 @@ function calculateDayFour(array){
         total += array[i];
         count++;
     };
-    return ( total / count)
+    let num = ( total / count)
+    let n = num.toFixed(0);
+    return n
 }
 function calculateDayFive(array){
     var multiplier = 4
@@ -241,10 +280,33 @@ function calculateDayFive(array){
         total += array[i];
         count++;
     };
-    return ( total / count)
+    let num = ( total / count)
+    let n = num.toFixed(0);
+    return n
 }
 
+function appendCards(array,index){
+    
+        var forecastCard = forecastEl.children[index]
+        forecastCard.classList = 'col-sm-2 fs-6 fw-light bg-dark text-light py-2 w-12'
+        
+        const date = document.createElement('h6')
+        const temp = document.createElement('p')
+        const wind = document.createElement('p')
+        const hum = document.createElement('p')
+    
+        temp.textContent = "Temp: "+array[0]+" °F"
+        wind.textContent = "Wind: "+array[1]+" MPH"
+        hum.textContent = "Hum: "+array[2]+"%"
+        date.textContent = array[3]
 
+        forecastCard.appendChild(date)
+        forecastCard.appendChild(temp)
+        forecastCard.appendChild(wind)
+        forecastCard.appendChild(hum)
+    
+
+}
 
 function displayForecast(city){
     console.log(city);
@@ -256,13 +318,7 @@ function displayForecast(city){
     const temp = document.createElement('p')
     const wind = document.createElement('p')
     const hum = document.createElement('p')
-
-    var test = document.querySelector('#forecast-cards');
-
-    for (var i=0; i<5; i++){
-        var testCard = test.children[i];
-    testCard.textContent = "I'm a child"+[i]
-    }
+    
 
     location.textContent = city.city.name + "   "+ city.list[0].dt_txt + "  "+city.list[0].weather[0].icon
     location.classList = 'fs-2'

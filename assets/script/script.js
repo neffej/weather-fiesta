@@ -7,7 +7,7 @@ var forecastEl = document.querySelector('#forecast-cards');
 
 
 var clearBtn = document.querySelector('#clear-button')
-var latLongArray=[];
+var resultArray=[];
 var savedCoordinates=[];
 var cityList=[];
 var IDArray=[0,1,2,3,4]
@@ -34,6 +34,7 @@ function init(){
         var name = cityList[i].cityName
 
         console.log(name);
+        console.log(cityList)
 
         addCityToList(name);
 }
@@ -42,6 +43,7 @@ function init(){
 
 
 // BUTTON FUNCTIONS
+// This button initiates the forecast retrieval code. If the user submission is not blank, then a function is run which sends an API call to retrieve a list of cities that match the user search.
 searchBtn.addEventListener('click', function(event){
     event.preventDefault();
 
@@ -56,6 +58,7 @@ searchBtn.addEventListener('click', function(event){
         }
 });
 
+// This button clears the list of cities saved on the page
 clearBtn.addEventListener('click',function(event){
     event.preventDefault
     localStorage.clear();
@@ -64,27 +67,39 @@ clearBtn.addEventListener('click',function(event){
 
 })
 
+// This click event refers to the buttons that populate upon a user search.  The user selects one of the buttons; the selected city is added to localStorage, a function is called to populate the "selected-cities" list with the user selection, and the search options are cleared.
 document.querySelector('#search-results').addEventListener('click',function(event){
     event.preventDefault;
 
     var city = event.target
     var cityID = Number(city.id)
     var cityName = city.textContent
-    console.log(cityName)
-    console.log(latLongArray[cityID])
-    var latLong = latLongArray[cityID]
+    console.log(cityName,cityID)
+    console.log(resultArray[cityID])
+    console.log(resultArray[0].name+', '+resultArray[0].state+', '+resultArray[0].country)
+    for (var i=0; i<resultArray.length; i++){
+             if(cityName == resultArray[i].name+', '+resultArray[i].state+', '+resultArray[i].country){
+                var lat = resultArray[i].lat
+                var lon = resultArray[i].lon
+                var latLong = {lat,lon}
+        }
+        }
     
 
     savedCoordinates.push(latLong);
     cityList.push({latLong,cityName})
+    console.log(cityList)
     localStorage.setItem('citylist',JSON.stringify(cityList));   
+
     addCityToList(cityName)
+    clearList(searchResults)
+
+
 })
+
 
 document.querySelector('#selected-cities').addEventListener('click',function(event){
     event.preventDefault;
-
-
 
     var city = event.target;
     var cityText = city.textContent
@@ -116,25 +131,28 @@ document.querySelector('#selected-cities').addEventListener('click',function(eve
 // SUPPORT AND DISPLAY FUNCTIONS
 function displaySearchResults(city){
 
-
     for(var i=0; i < city.length; i++){
     const list = document.querySelector('#search-results');
-
+// Create elements for each search option
     const row = document.createElement('a');
 
+// Create an object to hold city data
+    var result = {lat:city[i].lat, lon:city[i].lon, name:city[i].name, state:city[i].state,country:city[i].country}
+
+// Style the elements
     row.classList= 'list-item flex-row justify-space-between align-center btn btn-light rounded-3 text-dark'
+// Set the element id to a number between 0->5
     row.id= IDArray[i];
+// Grab information from API and attach to display
     row.textContent = [city[i].name,' '+city[i].state,' '+city[i].country]
-    
-    var lat = city[i].lat;
-    var lon = city[i].lon;
-    latLongArray.push({lat, lon})
 
+// Push city data to an array
+    resultArray.push(result)
 
-
+// Display elements in the appropriate column container
     list.appendChild(row);  
 }
-console.log(latLongArray)
+console.log(resultArray)
 }
 
 function searchCityList(city){
@@ -172,6 +190,7 @@ function clearList(list){
     while(list.firstChild){
         list.removeChild(list.firstChild);
     }
+var latLongArray = []
 }
 
 function calculateForecast(city){
@@ -333,9 +352,6 @@ function displayForecast(city){
     list.insertBefore(wind,list.children[0])
     list.insertBefore(temp,list.children[0])
     list.insertBefore(location,list.children[0])
-
-       
-
 }
 
 

@@ -10,6 +10,16 @@ var savedCoordinates=[];
 var cityList=[];
 var IDArray=[0,1,2,3,4]
 
+var dayOne = []
+var dayTwo = []
+var dayThree = []
+var dayFour = []
+var dayFive = []
+
+var tempArray = []
+var windArray = []
+var humArray = []
+
 
 var forecastURL= 'http://api.openweathermap.org/data/2.5/forecast?lat=34.8781&lon=-83.4010&appid=af55055307791ec469a2fe0620680567'
 
@@ -47,9 +57,7 @@ clearBtn.addEventListener('click',function(event){
     event.preventDefault
     localStorage.clear();
     var cityList = document.querySelector('#selected-cities')
-    while (cityList.firstChild){
-        cityList.removeChild(cityList.firstChild)
-    }
+    clearList(cityList);
 
 })
 
@@ -72,6 +80,7 @@ document.querySelector('#search-results').addEventListener('click',function(even
 
 document.querySelector('#selected-cities').addEventListener('click',function(event){
     event.preventDefault;
+
 
 
     var city = event.target;
@@ -135,9 +144,7 @@ function searchCityList(city){
     .then(function(data){
         console.log(searchResults.length);
 
-        while (searchResults.firstChild){
-            searchResults.removeChild(searchResults.firstChild)};
-
+        clearList(searchResults);
         displaySearchResults(data);
         return;
         
@@ -158,14 +165,104 @@ function addCityToList(city){
     list.appendChild(row);  
 }
 
+function clearList(list){
+    while(list.firstChild){
+        list.removeChild(list.firstChild);
+    }
+}
+
+function calculateForecast(city){
+
+    for (var i=0; i < city.list.length; i++){
+        
+        var temp = city.list[i].main.temp
+        var wind = city.list[i].wind.speed
+        var hum = city.list[i].main.humidity    
+
+            tempArray.push(temp)
+            windArray.push(wind)
+            humArray.push(hum)
+    }
+    dayOne.push(calculateDayOne(tempArray))
+    dayOne.push(calculateDayOne(windArray))
+    dayOne.push(calculateDayOne(humArray))
+    console.log(dayOne)
+
+}
+function calculateDayOne(array){
+    var total = 0;
+    var count = 0;
+
+    for(var i=0; i < 8; i++){
+        total += array[i];
+        count++;
+    };
+    return ( total / count)
+}
+function calculateDayTwo(array){
+    var multiplier = 1
+    var total = 0;
+    var count = 0;
+
+    for(var i=(0+(multiplier*8)); i < (7+(multiplier*8)); i++){
+        total += array[i];
+        count++;
+    };
+    return ( total / count)
+}
+function calculateDayThree(array){
+    var multiplier = 2
+    var total = 0;
+    var count = 0;
+
+    for(var i=(0+(multiplier*8)); i < (7+(multiplier*8));i++){
+        total += array[i];
+        count++;
+    };
+    return ( total / count)
+}
+function calculateDayFour(array){
+    var multiplier = 3
+    var total = 0;
+    var count = 0;
+
+    for(var i=(0+(multiplier*8)); i < (7+(multiplier*8)); i++){
+        total += array[i];
+        count++;
+    };
+    return ( total / count)
+}
+function calculateDayFive(array){
+    var multiplier = 4
+    var total = 0;
+    var count = 0;
+
+    for(var i=(0+(multiplier*8)); i < (7+(multiplier*8)); i++){
+        total += array[i];
+        count++;
+    };
+    return ( total / count)
+}
+
+
+
 function displayForecast(city){
     console.log(city);
+    calculateForecast(city);
+
     const list =  document.querySelector('#current-weather')
 
     const location = document.createElement('h1')
     const temp = document.createElement('p')
     const wind = document.createElement('p')
     const hum = document.createElement('p')
+
+    var test = document.querySelector('#forecast-cards');
+
+    for (var i=0; i<5; i++){
+        var testCard = test.children[i];
+    testCard.textContent = "I'm a child"+[i]
+    }
 
     location.textContent = city.city.name + "   "+ city.list[0].dt_txt + "  "+city.list[0].weather[0].icon
     location.classList = 'fs-2'
@@ -174,13 +271,13 @@ function displayForecast(city){
     wind.textContent = "Wind Speed:  " +city.list[0].wind.speed+" MPH"
     hum.textContent = "Humidity:  "+city.list[0].main.humidity+"%"
 
-    // while(list.firstChild){list.removeChild(list.firstChild)}
+    clearList(list);
 
-    list.appendChild(location)
-    list.appendChild(temp)
-    list.appendChild(wind)
-    list.appendChild(hum)
-    
+    list.insertBefore(hum,list.children[0])
+    list.insertBefore(wind,list.children[0])
+    list.insertBefore(temp,list.children[0])
+    list.insertBefore(location,list.children[0])
+
        
 
 }

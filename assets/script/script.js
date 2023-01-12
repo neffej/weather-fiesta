@@ -97,18 +97,20 @@ document.querySelector('#search-results').addEventListener('click',function(even
 
 })
 
-
+// This click event refers to the list of saved cities, populated from local storage
 document.querySelector('#selected-cities').addEventListener('click',function(event){
     event.preventDefault;
 
+    // Identifies which item was clicked
     var city = event.target;
     var cityText = city.textContent
     console.log(cityText)   
 
-
+// Retrieves information from local storage
     var cityList = JSON.parse(localStorage.getItem('citylist'))
     console.log(cityList[0].cityName)
 
+    // Cycles through local storage to find matching city and sends match to API to retrieve forecast data
     for (var i = 0; i < cityList.length; i++){
         if (cityText === cityList[i].cityName){
             console.log('cities match')
@@ -118,6 +120,7 @@ document.querySelector('#selected-cities').addEventListener('click',function(eve
             .then(function(response){
                 return response.json();
             })
+            // Retrieved data is displayed via the called function
             .then(function(data){
                 displayForecast(data);
                 return;
@@ -129,6 +132,8 @@ document.querySelector('#selected-cities').addEventListener('click',function(eve
 })
 
 // SUPPORT AND DISPLAY FUNCTIONS
+
+// The data that is returned from the first API call is insufficient for producing a forecast; there are too many synonomous cities in the world. So, this function displays the first 5 results from the API call so that the user can select which city they mean.
 function displaySearchResults(city){
 
     for(var i=0; i < city.length; i++){
@@ -155,6 +160,7 @@ function displaySearchResults(city){
 console.log(resultArray)
 }
 
+// The first API call - when users input a city name, this function sends a call out to retrieve more data.
 function searchCityList(city){
     var geocodingURL= 'https://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=5&appid=af55055307791ec469a2fe0620680567'
 
@@ -172,6 +178,7 @@ function searchCityList(city){
         })
 }
 
+// When the user selects a city from their search results, this function appends that selection to a list
 function addCityToList(city){
     // Append selected city to list
     const list = document.querySelector('#selected-cities');
@@ -186,13 +193,14 @@ function addCityToList(city){
     list.appendChild(row);  
 }
 
+// This function clears the called HTML list displays 
 function clearList(list){
     while(list.firstChild){
         list.removeChild(list.firstChild);
     }
-var latLongArray = []
 }
 
+// This function calculates values to then be displayed on screen
 function calculateForecast(city){
 
     for (var i=0; i < city.list.length; i++){
@@ -208,6 +216,8 @@ function calculateForecast(city){
             humArray.push(hum)
             dateArray.push(date)
     }
+
+    // The following suite of functions commits the calculated values to arrays for each forecast day. There is probably a more efficient way to do this. 
     dayOne.push(calculateDayOne(tempArray))
     dayOne.push(calculateDayOne(windArray))
     dayOne.push(calculateDayOne(humArray))
@@ -238,7 +248,7 @@ console.log(dayTwo)
     appendCards(dayFive,4);
 }
 
-
+// The next five functions calculate averages for the displayed values. There is one function for each calculated day; there is definitely a better way to do this, but that's a TO-DO for next time.
 function calculateDayOne(array){
     var total = 0;
     var count = 0;
@@ -304,21 +314,32 @@ function calculateDayFive(array){
     return n
 }
 
+// This function populates the little forecast cards with the calculated information
 function appendCards(array,index){
     
         var forecastCard = forecastEl.children[index]
+        console.log(forecastCard.hasChildNodes())
+
+        // If the cards already have elements, clear them and repopulate
+        if(forecastCard.hasChildNodes()===true){
+            clearList(forecastCard)
+        }
+
         forecastCard.classList = 'col-sm-2 fs-6 fw-light bg-dark text-light py-2 w-12'
-        
+
+        // Create elements
         const date = document.createElement('h6')
         const temp = document.createElement('p')
         const wind = document.createElement('p')
         const hum = document.createElement('p')
     
+        // Give elements text from gathered information
         temp.textContent = "Temp: "+array[0]+" °F"
         wind.textContent = "Wind: "+array[1]+" MPH"
         hum.textContent = "Hum: "+array[2]+"%"
         date.textContent = array[3]
 
+        // Append elements to appropriate list
         forecastCard.appendChild(date)
         forecastCard.appendChild(temp)
         forecastCard.appendChild(wind)
@@ -327,8 +348,12 @@ function appendCards(array,index){
 
 }
 
+// This function transcribes the information from the weather API to a displayed forecast
 function displayForecast(city){
     console.log(city);
+    console.log(forecastEl[0])
+
+    
     calculateForecast(city);
 
     const list =  document.querySelector('#current-weather')
